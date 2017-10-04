@@ -1,0 +1,52 @@
+title     
+7. Non-Congenital Disease with Lifetime Risk dependent on sex and pgs
+       
+description     
+This is the Major Depression disease model again. 
+However a quantitative risk factor 'pgs' has been added to the model. 
+'pgs' is wholely genetic. It could be a polygenic risk score derived from GWAS study results. 
+'pgs' is assumed to be have a population mean of 0 and std dev of 1. 
+Given this and disease liability having a std dev of 1, the regression coeff of 0.32 implies that pgs explains 10% of liability variance. 
+droppedRiskFactors - You can drop both sex and pgs from being risk factors by uncommenting the droppedRiskFactors heading. 
+     
+lifetimeRisk 0.15
+     
+heritability 0.66    
+     
+#droppedRiskFactors     
+sex pgs
+     
+ageOfOnset
+age expressedProportionOfLifetimeRisk
+0   0
+14  0.025
+24  0.235
+34  0.56
+44  0.80
+54  0.945
+55  1
+     
+categoricalRiskFactors     
+riskFactor value freq relRisk  
+sex        1     0.5  1  
+sex        2     0.5  2  
+     
+covMatrixTot
+id        pgs       sex  
+liability 0.3162278 NA  
+pgs       1         0  
+     
+covMatrixAsq     
+id        pgs       sex  
+pgs       1         0  
+sex       NA        0  
+     
+covMatrixCsq     
+id        pgs       sex  
+pgs       0         0  
+sex       NA        0  
+     
+covMatrixEsq     
+id        pgs       sex  
+pgs       0         0  
+sex       NA        1  

@@ -1,0 +1,34 @@
+# D Campbell 2.3.15
+
+title
+6. Non-Congenital Disease with Sex-Dependent Age of Onset
+  
+description
+For this disease, age of onset depends on sex.
+Schizophrenia has a very similar disease model. 
+For Schizophrenia lifetime risk is the same for males and females.
+However age of onset differs between males and females, being typically early 20s for males, late 20s for females.
+
+lifetimeRisk             0.01
+
+# the ACE model is taken from 
+# - Sullivan, Kendler, Neale. 2003. Schizophrenia as a complex trait: evidence from a meta-analysis of twin studies.
+
+heritability             0.81
+sharedEnvironmentability 0.11
+
+# Age of Onset curves - made up by myself
+ageOfOnset
+sex age expressedProportionOfLifetimeRisk
+1   10  0
+1   15  0.1
+1   20  0.3
+1   25  0.7
+1   30  0.9
+1   40  1
+2   10  0
+2   15  0.05
+2   20  0.1
+2   25  0.3
+2   30  0.7
+2   40  1

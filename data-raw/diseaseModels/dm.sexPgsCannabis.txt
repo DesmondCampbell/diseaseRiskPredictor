@@ -1,0 +1,71 @@
+# D Campbell 20.10.15
+
+title     
+8. Non-Congenital Disease model with 3 risk factors 
+       
+description     
+Disease model with 3 risk factors
+- sex is solely unique env. 
+- pgs is solely genetic. 
+- cannabis is ACE. 
+- cannabis correlates with sex. 
+
+
+lifetimeRisk 0.01
+
+heritability             0.81
+sharedEnvironmentability 0.11
+
+
+#droppedRiskFactors     
+sex pgs     
+
+     
+categoricalRiskFactors     
+riskFactor  value freq  relRisk  
+sex         1     0.5   1  
+sex         2     0.5   2  
+cannabis    0     0.90  1
+cannabis    1     0.05  1
+cannabis    2     0.05  1.5
+
+
+covMatrixTot     
+id        pgs       sex cannabis
+liability 0.3162278 NA  NA
+# XXXX is this right do I have to specify tot cov pgs sex
+pgs       1         0   0
+
+covMatrixAsq     
+id        pgs       sex cannabis
+pgs       1         0   0
+sex       NA        0   0
+cannabis  NA        NA  0.3
+
+covMatrixCsq     
+id        pgs       sex cannabis
+pgs       0         0   0
+sex       NA        0   0
+cannabis  NA        NA  0.3
+     
+covMatrixEsq     
+id        pgs       sex cannabis
+pgs       0         0   0
+sex       NA        1   -0.2
+cannabis  NA        NA  0.4
+
+
+ageOfOnset
+sex age expressedProportionOfLifetimeRisk
+1   10  0
+1   15  0.1
+1   20  0.3
+1   25  0.7
+1   30  0.9
+1   40  1
+2   10  0
+2   15  0.05
+2   20  0.1
+2   25  0.3
+2   30  0.7
+2   40  1

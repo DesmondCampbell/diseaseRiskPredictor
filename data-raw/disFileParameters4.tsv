@@ -1,0 +1,67 @@
+category	parameter	required	type
+#			
+# globals			
+global	title	T	character
+global	description	F	characterVector
+global	lifetimeRisk	T	proportion
+global	heritability	F	proportion
+global	sharedEnvironmentability	F	proportion
+global	uniqueEnvironmentability	F	proportion
+global	ageOfOnset	F	table
+global	quantitativeRiskFactors	F	table
+global	categoricalRiskFactors	F	table
+global	riskFactorModel	F	table
+global	covariances	F	table
+global	proportions	F	table
+global	partitionsOfVariance	F	table
+global	covMatrixTot	F	table
+global	covMatrixAsq	F	table
+global	covMatrixCsq	F	table
+global	covMatrixEsq	F	table
+global	droppedRiskFactors	F	character
+#			
+# categoricalRiskFactors			
+categoricalRiskFactors	riskFactor	T	character
+categoricalRiskFactors	value	T	numeric
+categoricalRiskFactors	freq	T	proportion
+categoricalRiskFactors	relRisk	T	positive
+#			
+# quantitativeRiskFactors			
+quantitativeRiskFactors	riskFactor	T	character
+quantitativeRiskFactors	beta0	T	numeric
+quantitativeRiskFactors	beta1	T	numeric
+#		
+# strata			
+strata	lifetimeRisk	F	proportion
+strata	age	F	positive
+strata	expressedProportionOfLifetimeRisk	F	proportion
+global	SUFFIX=.beta0	F	numeric
+global	SUFFIX=.beta1	F	numeric
+#			
+# age of onset 			
+ageOfOnset	age	T	positive
+ageOfOnset	expressedProportionOfLifetimeRisk	T	proportion
+#			
+# riskFactorModel			
+riskFactorModel	riskFactor	T	character
+riskFactorModel	A	T	proportion
+riskFactorModel	C	T	proportion
+riskFactorModel	E	T	proportion
+#			
+# covariances			
+covariances	variable1	T	character
+covariances	variable2	T	character
+covariances	cov	T	numeric
+#			
+# proportions
+proportions	variable1	T	character
+proportions	variable2	T	character
+proportions	Asq	T	proportion
+proportions	Csq	T	proportion
+proportions	Esq	T	proportion
+
+#partitionsOfVariance
+partitionsOfVariance	variable	T	character
+partitionsOfVariance	Asq	T	proportion
+partitionsOfVariance	Csq	T	proportion
+partitionsOfVariance	Esq	T	proportion

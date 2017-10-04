@@ -1,0 +1,47 @@
+# D Campbell 20.10.15
+
+title
+Depression Disease Model
+
+description
+This is a disease model for depression.
+Lifetime risk depends on sex, being twice as high in females as males.
+The age of onset curve doesn't differ between the sexes.
+This model is based on a model for Major Depression justified in Campbell et al. 2010.
+The Campbell et al. model had sex specific age of onset curves.
+However male and female age of onset curves are similar and have been merged here.
+
+
+lifetimeRisk 0.15
+
+heritability 0.66
+
+
+ageOfOnset
+age     expressedProportionOfLifetimeRisk
+0       0
+14      0.025
+24      0.235
+34      0.56
+44      0.80
+54      0.945
+55      1
+
+
+categoricalRiskFactors
+riskFactor      value   freq    relRisk
+sex             1       0.5     1
+sex             2       0.5     2
+
+
+covMatrixAsq
+id   sex
+sex  0
+
+covMatrixCsq
+id   sex
+sex  0
+
+covMatrixEsq
+id   sex
+sex  1

@@ -1,0 +1,26 @@
+title   
+3. Congenital disease with Quantitative Risk Factor
+   
+description   
+quantitative risk factor example
+
+lifetimeRisk 0.05
+
+heritability 0.8  
+
+covMatrixTot
+id        liability pgs
+liability 1         0.3162278
+pgs       NA        1  
+
+covMatrixAsq
+id   pgs
+pgs  1  
+
+covMatrixCsq
+id   pgs
+pgs  0  
+
+covMatrixEsq
+id   pgs
+pgs  0  

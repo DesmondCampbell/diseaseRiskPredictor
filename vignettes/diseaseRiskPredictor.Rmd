@@ -1,0 +1,213 @@
+---
+title: "Disease Risk Predictor"
+author: "Desmond Campbell"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    fig_width: 7
+    fig_height: 4
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Disease Risk Predictor}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+This package facilitates
+
+* developing disease models from epidemiolgical findings
+* predicting disease risk for the individuals of a family (pedigree), based on these disease models.
+
+Multifactorial dichotomous disorders, i.e. disorders characterised by two states - affected v unaffected, are modelled using the liability threshold model. All the following features can be incorporated in combination: 
+
+* partitioning of population liability variance into genetic, shared environment and unique environment effects.
+* categorical risk factors (e.g. sex, smoker, major genetic risk loci), 
+* quantitative risk factors (e.g. BMI, polygenic score), 
+* age of onset curves 
+
+The package allows application of such models to disease pedigrees. Pedigree related outputs are 
+
+* individual disease risk for pedigree members
+* n year disease risk for pedigree members
+* the disease pedigree liability distribution. 
+
+The disease model allows evidence available from personal attributes and family history to be appropriately weighed in construction of the disease pedigree's liability distribution. Predictions of lifetime and n year risk are calculated, per pedigree member, from this distribution.
+
+The package is the engine behind a website 
+
+* http://grass.cgs.hku.hk:3838/mdrc/current
+
+The website allows 
+
+* disease model construction
+* disease pedigree construction
+* disease risk prediction for pedigree members
+
+Example disease models and pedigrees are provided at the website and are used in accompanying tutorials to illustrate the features available.
+
+We focus on dichotomous multifactorial disease. Models for single-gene (Mendelian) diseases can be constructed (using major genetic risk locii as categorical risk factors). We cannot vouch for the appropriateness of such models as our expertise is in multifactorial disease. Disorders/traits of a continuous nature (e.g. blood pressure) are not handled.
+
+# Example
+The package allows the prediction of disease risk for the individuals of a family (pedigree), based on a disease model. This example demonstrates the typically use of the package. We will
+
+1. create a disease model
+1. look at a disease pedigree
+1. predict disease risk for the pedigree members based on the disease model
+
+## Creating a Disease model
+### Epidemiology
+We consider a model for Major Depression, which illustrates many of the features available. Disease lifetime risk is 15%, liability follows an AE model with heritability of 66%. The disease risk for females is twice that of males. Of the 15% destined to suffer the disease, 80% will have done so by the age of 44. Hopefully, how these features are represented in the disease model object shown below is obvious. 
+
+Somewhat counter-intuitively, gender is a component of non-shared environmental effect. This is correct; my sex does not predict that of my sibling. Sex is genetically determined, but whether we inherit an X or Y paternal chromosome, is a random event. This is represented in the covMatrixAsq, covMatrixCsq and covMatrixEsq elements of the disease model object.
+
+The following code reports the baseline disease model object we will use.
+
+````{r}
+suppressPackageStartupMessages(library(diseaseRiskPredictor))
+
+# copy depression disease model into current environment
+lDis <- diseaseRiskPredictor::lDisDepression
+
+# report the depression disease model
+lDis
+````
+
+### Building a model
+So far the disease model object just contains epidemiological data. In the next bit of code that epidemiological data is used to build a liability threshold disease model. Several items get added to the disease model object and the categoricalRiskFactors table is extended. 
+
+````{r}
+# calculate disease model
+lDis <- fnCalcDiseaseModel( lDis )
+names(lDis)
+````
+
+## Disease Pedigree
+The linkage/ped file format is a well known format for specifying family trees. Each row pertains to one pedigree member. We represent disease pedigrees in a data.frame with a similar structure. The following code reports a three generation pedigree with one affected member.
+
+````{r}
+# copy 3 generation pedigree into current environment
+dfPed <- diseaseRiskPredictor::dfPed3Gen1Aff
+dfPed
+````
+
+The ped file format is hard to read, this makes pedigree mis-specification hard to detect. To help guard against that, we provide functionality allowing
+
+* the validity of the pedigree to be checked
+* the pedigree to be plotted
+
+The next bit of code performs various checks on the validity of the pedigree.
+
+````{r}
+# validate pedigree (also performs type conversion on some columns, hence the returned object)
+dfPed <- fnValidatePedigree( dfPed )
+````
+
+The next bit of code generates the corresponding pedigree diagram.
+
+````{r, fig.width=7, fig.height=4}
+# construct pedigree object
+oPedigree <- fnConstructPedigree( dfPed )
+
+# plot pedigree diagram
+plot(oPedigree)
+````
+
+## Calculating the Pedigree Members' Risks
+Now let's apply the Major Depression disease model to the 3 generation pedigree. The following code does that. 
+
+````{r}
+lPedDis <- fnPrepareForRiskPrediction( dfPed, lDis )
+
+# calculate pedigree members' risks of depression
+lRes <- fnPredictRisk( lPedDis )
+
+# report contents of the results object
+names(lRes)
+````
+
+### Risk
+The results object returned is a named list. One of its elements  (dfPedRisk) contains pedigree members' predicted risk. The following code reports and also plots the pedigree members' risks.
+
+````{r, fig.width=7, fig.height=4}
+# report pedigree members' risks
+lRes$dfPedRisk[,c(2,3,5:7,11:12)]
+
+# plot pedigree members' risks
+fnBarPlotRisk( lRes$dfPedRisk )
+````
+
+Looking at the above barplot some features are apparent. There is a sex difference in risk, with females more at risk. For instance, siblings 21 and 22 are identical in all relevant variables except for sex. Ditto, siblings 31 and 32. 
+
+The effect of age on risk prediction is also apparent. Persons 11, 21 and 31 are all unaffected 1st degree male relatives of the affected person, their only (relevant) difference is in age. This dramatically influenced their disease risk. Ditto, females 12, 22 and 32.
+
+Person 24's affection status is not known. Her only genetic relations in the pedigree are persons 31 and 32. Both are unaffected, but that status is uninformative due to their age. Consequently there is no pedigree information informing on her risk. Her risk should then be the population lifetime risk for females. That is indeed the case. The following code reports
+
+* `risk` column - the population lifetime risk for each risk factor category
+* `propPopAff` column - the contribution of each risk factor stratum to the affected population.
+
+````{r}
+lRes$lDis$categoricalRiskFactors[,1:7]
+````
+
+### N Year Risk
+The dfPedRisk object also contains the pedigree members' 5 year risks, as reported by the following code
+
+
+````{r, fig.width=7, fig.height=4}
+# report pedigree members' risks
+lRes$dfPedRisk[,c(2,3,5:7,13,18)]
+````
+
+The `nYearRisk` column gives risk of developing the condition in the next _n_ years, the `nofYears` column specifies _n_. One can see comparing the 2nd and 3rd generations, that the 2nd generation have greater 5 year risk than the 3rd generation (for risks this is reversed). This makes sense given the age of onset curve (in the disease epidemiological findings above).
+
+# See Also
+More complex disease models and pedigrees can be specified. Disease models and pedigrees can be saved/loaded to/from human readable and editable text files. A website built around this package allows interactive
+
+* disease model construction
+* disease pedigree construction
+* disease risk prediction for pedigree members
+
+It provides example disease models and pedigrees and tutorials illustrating the features available. It is a lot easier to use than the R command line, so rather than try to explain everything here, I recommend it to interested parties
+
+* http://grass.cgs.hku.hk:3838/mdrc/current
+
+# Installation
+If you want to use the R package (as opposed to the website) you will have to install it. You can install from github by entering the folowing at the R prompt
+
+````{r eval=FALSE}
+# install it
+devtools::install_github("diseaseRiskPredictor")
+
+# attach it
+library("diseaseRiskPredictor")
+````
+
+For this to work you will have to have already installed `devtools`.
+
+There is currently a bug in the kinship2::plot.pedigree function which prevents it from plotting some valid pedigrees. Run the following command to replace the kinship2 function with a patch function which fixes the bug.
+
+````{r eval=FALSE}
+assignInNamespace( "plot.pedigree", diseaseRiskPredictor:::plot.pedigree.FIXED, ns="kinship2")
+````
+ 
+
+# Methodology
+The methodology used in the construction of the disease models is detailed in our paper, Campbell et al. 2017.
+
+Application of the disease model to pedigrees is based on methodology explained in Campbell et al. 2010.
+
+A lot of the pedigree related functionality leans heavily on the R package `kinship2` (Sinnwell et al. 2014).
+
+#Contacts
+Feel free to contact us via
+
+* desmond.campbell @ glasgow.ac.uk
+* or the contacts listed in Campbell et al. 2017
+
+#References
+Campbell et al. 2017. Multifactorial Disease Risk Calculator: Web-based risk prediction for multifactorial disease pedigrees. Genetic Epidemiology. 
+
+Campbell DD, Sham PC, Knight J, Wickham H, and Landau S. 2010. Software for Generating Liability Distributions for Pedigrees Conditional on Their Observed Disease States and Covariates. Genetic Epidemiology 34 (2): 159–70. doi:10.1002/gepi.20446.
+
+Sinnwell JP, Therneau TM, and Schaid DJ. 2014. ‘The kinship2 R Package for Pedigree Data’. Human Heredity 78 (2): 91–93. doi:10.1159/000363105.

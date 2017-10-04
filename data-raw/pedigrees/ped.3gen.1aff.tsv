@@ -1,0 +1,10 @@
+# 3 generation pedigree
+famid	id	fatherid	motherid	sex	affected	age	deceased
+1	11	0	0	1	0	69	1
+1	12	0	0	2	0	69	0
+1	21	11	12	1	0	34	0
+1	22	11	12	2	0	34	0
+1	23	11	12	1	1	36	0
+1	24	0	0	2	NA	34	0
+1	31	23	24	1	0	7	0
+1	32	23	24	2	0	8	0

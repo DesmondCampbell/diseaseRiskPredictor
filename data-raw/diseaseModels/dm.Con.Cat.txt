@@ -1,0 +1,28 @@
+# D Campbell 2.3.15
+
+title
+4. Congenital Disease with Categorical Risk Factor
+  
+description
+For this disease, lifetime risk depends on sex, being twice as high in females as males.
+
+lifetimeRisk 0.15
+
+heritability 0.66 
+
+categoricalRiskFactors
+riskFactor      value   freq    relRisk
+sex             1       0.5     1
+sex             2       0.5     2
+ 
+covMatrixAsq
+id   sex
+sex  0
+
+covMatrixCsq
+id   sex
+sex  0
+
+covMatrixEsq
+id   sex
+sex  1

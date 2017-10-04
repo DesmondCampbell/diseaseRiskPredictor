@@ -1,0 +1,13 @@
+# D Campbell 2.3.15
+
+Title
+1. Single Stratum Congenital Disease
+   
+Description
+This single stratum disease is congenital (expressed from birth).
+Population variance in disease liability is explained by genes and non-shared environmental effects.
+This is the simplest disease model possible in this program.
+
+lifetimeRisk 0.05
+
+heritability 0.6

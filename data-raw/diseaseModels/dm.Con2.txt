@@ -1,0 +1,13 @@
+# D Campbell 2.3.15
+
+Title
+2. Single Stratum Congenital Disease (with Csq)
+  
+Description
+This single stratum disease is congenital (expressed from birth).
+Some of the liability variance (10%) is due to shared environmental effects.
+
+lifetimeRisk             0.05
+
+heritability             0.8
+sharedEnvironmentability 0.1

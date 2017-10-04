@@ -1,0 +1,23 @@
+# D Campbell 2.3.15
+
+title
+5. Non-Congenital Disease
+  
+description
+This disease is not congenital, i.e not-necessarily manifest from birth.
+The age of onset curve tells you what proportion of those destined to eventually be affected with the disease, manifest it by a given age.
+The disease's age of onset curve is specified in an 'ageOfOnset' table.
+The 'expressedProportionOfLifetimeRisk' column of the 'ageOfOnset' table holds the above mentioned proportion.
+
+lifetimeRisk 0.1
+
+heritability 0.8
+
+ageOfOnset
+age expressedProportionOfLifetimeRisk
+10  0
+20  0.4
+30  0.6
+40  0.8
+60  1
+

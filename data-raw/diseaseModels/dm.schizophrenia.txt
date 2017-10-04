@@ -1,0 +1,39 @@
+# D Campbell 20.10.15
+
+title
+Schizophrenia Disease Model
+  
+description
+This is a disease model for schizophrenia.
+For Schizophrenia lifetime risk is the same for males and females.
+However age of onset differs between males and females, being typically early 20s for males, late 20s for females.
+Sources
+The partitioning of liability variance comes from 
+- Sullivan, Kendler, Neale. 2003. Schizophrenia as a complex trait: evidence from a meta-analysis of twin studies.
+Other parts come from just general knowledge.
+Caveats
+The relative risk estimates the model produces are a bit high compared to Gottesman 1991, see http://www.schizophrenia.com/research/hereditygen.htm
+However when lifetime risk is reduced to 0.5% they match alot better.
+Sullivan, Kendler, Neale. 2003. based their ACE model on a meta-analysis of twin studies, in when there was heterogeneity across studies of lifetime risk.
+They said this didn't impact on their estimation of how variance was partitioned.
+
+
+lifetimeRisk             0.01
+
+heritability             0.81
+sharedEnvironmentability 0.11
+
+ageOfOnset
+sex age expressedProportionOfLifetimeRisk
+1   10  0
+1   15  0.1
+1   20  0.3
+1   25  0.7
+1   30  0.9
+1   40  1
+2   10  0
+2   15  0.05
+2   20  0.1
+2   25  0.3
+2   30  0.7
+2   40  1
