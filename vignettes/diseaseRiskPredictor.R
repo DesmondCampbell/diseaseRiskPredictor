@@ -53,7 +53,7 @@ lRes$dfPedRisk[,c(2,3,5:7,13,18)]
 
 ## ----eval=FALSE----------------------------------------------------------
 #  # install it
-#  devtools::install_github("diseaseRiskPredictor")
+#  devtools::install_github("DesmondCampbell/diseaseRiskPredictor")
 #  
 #  # attach it
 #  library("diseaseRiskPredictor")

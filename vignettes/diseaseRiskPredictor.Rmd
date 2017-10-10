@@ -177,7 +177,7 @@ If you want to use the R package (as opposed to the website) you will have to in
 
 ````{r eval=FALSE}
 # install it
-devtools::install_github("diseaseRiskPredictor")
+devtools::install_github("DesmondCampbell/diseaseRiskPredictor")
 
 # attach it
 library("diseaseRiskPredictor")
