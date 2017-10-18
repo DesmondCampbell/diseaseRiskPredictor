@@ -53,11 +53,32 @@ lRes$dfPedRisk[,c(2,3,5:7,13,18)]
 
 ## ----eval=FALSE----------------------------------------------------------
 #  # install it
-#  devtools::install_github("DesmondCampbell/diseaseRiskPredictor")
+#  install.packages("Rcpp")
 #  
 #  # attach it
-#  library("diseaseRiskPredictor")
+#  library(Rcpp)
+#  
+#  # test c++ code for adding 1 plus 1
+#  evalCpp('1+1',showOutput=1,rebuild=1)
 
 ## ----eval=FALSE----------------------------------------------------------
+#  # install it
+#  install.packages("devtools")
+#  
+#  # attach it
+#  library(devtools)
+#  
+#  # test for Rtools installation
+#  find_rtools()
+
+## ----eval=FALSE----------------------------------------------------------
+#  install.packages("devtools")
+#  
+#  devtools::install_github("DesmondCampbell/diseaseRiskPredictor")
+
+## ----eval=FALSE----------------------------------------------------------
+#  # attach it
+#  library("diseaseRiskPredictor")
+#  
 #  assignInNamespace( "plot.pedigree", diseaseRiskPredictor:::plot.pedigree.FIXED, ns="kinship2")
 

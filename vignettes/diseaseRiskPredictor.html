@@ -12,7 +12,7 @@
 
 <meta name="author" content="Desmond Campbell" />
 
-<meta name="date" content="2017-10-10" />
+<meta name="date" content="2017-10-18" />
 
 <title>Disease Risk Predictor</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Disease Risk Predictor</h1>
 <h4 class="author"><em>Desmond Campbell</em></h4>
-<h4 class="date"><em>2017-10-10</em></h4>
+<h4 class="date"><em>2017-10-18</em></h4>
 
 
 <div id="TOC">
@@ -88,7 +88,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li><a href="#see-also">See Also</a></li>
-<li><a href="#installation">Installation</a></li>
+<li><a href="#installation">Installation</a><ul>
+<li><a href="#install-r-package-development-tools">Install R package development tools</a><ul>
+<li><a href="#check-tools-installation">Check tools installation</a></li>
+</ul></li>
+<li><a href="#build-and-install">Build and Install</a></li>
+<li><a href="#to-use-diseaseriskpredictor">To use diseaseRiskPredictor</a></li>
+</ul></li>
 <li><a href="#methodology">Methodology</a></li>
 <li><a href="#contacts">Contacts</a></li>
 <li><a href="#references">References</a></li>
@@ -147,7 +153,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(diseaseRiskPredictor))
 
 <span class="co"># copy depression disease model into current environment</span>
-lDis &lt;-<span class="st"> </span>diseaseRiskPredictor::lDisDepression
+lDis &lt;-<span class="st"> </span>diseaseRiskPredictor<span class="op">::</span>lDisDepression
 
 <span class="co"># report the depression disease model</span>
 lDis</code></pre></div>
@@ -213,7 +219,7 @@ lDis &lt;-<span class="st"> </span><span class="kw">fnCalcDiseaseModel</span>( l
 <h2>Disease Pedigree</h2>
 <p>The linkage/ped file format is a well known format for specifying family trees. Each row pertains to one pedigree member. We represent disease pedigrees in a data.frame with a similar structure. The following code reports a three generation pedigree with one affected member.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># copy 3 generation pedigree into current environment</span>
-dfPed &lt;-<span class="st"> </span>diseaseRiskPredictor::dfPed3Gen1Aff
+dfPed &lt;-<span class="st"> </span>diseaseRiskPredictor<span class="op">::</span>dfPed3Gen1Aff
 dfPed</code></pre></div>
 <pre><code>##   famid id fatherid motherid sex affected age deceased
 ## 1     1 11        0        0   1        0  69        1
@@ -286,19 +292,19 @@ lRes &lt;-<span class="st"> </span><span class="kw">fnPredictRisk</span>( lPedDi
 <h3>Risk</h3>
 <p>The results object returned is a named list. One of its elements (dfPedRisk) contains pedigree members’ predicted risk. The following code reports and also plots the pedigree members’ risks.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># report pedigree members' risks</span>
-lRes$dfPedRisk[,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>:<span class="dv">7</span>,<span class="dv">11</span>:<span class="dv">12</span>)]</code></pre></div>
+lRes<span class="op">$</span>dfPedRisk[,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span><span class="op">:</span><span class="dv">7</span>,<span class="dv">11</span><span class="op">:</span><span class="dv">12</span>)]</code></pre></div>
 <pre><code>##   id fatherid sex affected age expressedProportionOfLifetimeRisk      risk
 ## 1 11        0   1        0  69                        1.00000000 0.0000000
 ## 2 12        0   2        0  69                        1.00000000 0.0000000
-## 3 21       11   1        0  34                        0.56000000 0.0622000
-## 4 22       11   2        0  34                        0.56000000 0.1423667
+## 3 21       11   1        0  34                        0.56000000 0.0648000
+## 4 22       11   2        0  34                        0.56000000 0.1452667
 ## 5 23       11   1        1  36                        0.60800000 1.0000000
-## 6 24        0   2       NA  34                        0.56000000 0.1978000
-## 7 31       23   1        0   7                        0.01250000 0.2043667
-## 8 32       23   2        0   8                        0.01428571 0.3584000</code></pre>
+## 6 24        0   2       NA  34                        0.56000000 0.2001333
+## 7 31       23   1        0   7                        0.01250000 0.2021333
+## 8 32       23   2        0   8                        0.01428571 0.3558000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plot pedigree members' risks</span>
-<span class="kw">fnBarPlotRisk</span>( lRes$dfPedRisk )</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<span class="kw">fnBarPlotRisk</span>( lRes<span class="op">$</span>dfPedRisk )</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>Looking at the above barplot some features are apparent. There is a sex difference in risk, with females more at risk. For instance, siblings 21 and 22 are identical in all relevant variables except for sex. Ditto, siblings 31 and 32.</p>
 <p>The effect of age on risk prediction is also apparent. Persons 11, 21 and 31 are all unaffected 1st degree male relatives of the affected person, their only (relevant) difference is in age. This dramatically influenced their disease risk. Ditto, females 12, 22 and 32.</p>
 <p>Person 24’s affection status is not known. Her only genetic relations in the pedigree are persons 31 and 32. Both are unaffected, but that status is uninformative due to their age. Consequently there is no pedigree information informing on her risk. Her risk should then be the population lifetime risk for females. That is indeed the case. The following code reports</p>
@@ -306,7 +312,7 @@ lRes$dfPedRisk[,<span class="kw">c</span>(<span class="dv">2</span>,<span class=
 <li><code>risk</code> column - the population lifetime risk for each risk factor category</li>
 <li><code>propPopAff</code> column - the contribution of each risk factor stratum to the affected population.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lRes$lDis$categoricalRiskFactors[,<span class="dv">1</span>:<span class="dv">7</span>]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lRes<span class="op">$</span>lDis<span class="op">$</span>categoricalRiskFactors[,<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>]</code></pre></div>
 <pre><code>##   riskFactor value freq relRisk bRefStratum risk propPopAff
 ## 1        sex     1  0.5       1        TRUE  0.1       0.05
 ## 2        sex     2  0.5       2       FALSE  0.2       0.10</code></pre>
@@ -315,16 +321,16 @@ lRes$dfPedRisk[,<span class="kw">c</span>(<span class="dv">2</span>,<span class=
 <h3>N Year Risk</h3>
 <p>The dfPedRisk object also contains the pedigree members’ 5 year risks, as reported by the following code</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># report pedigree members' risks</span>
-lRes$dfPedRisk[,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>:<span class="dv">7</span>,<span class="dv">13</span>,<span class="dv">18</span>)]</code></pre></div>
+lRes<span class="op">$</span>dfPedRisk[,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span><span class="op">:</span><span class="dv">7</span>,<span class="dv">13</span>,<span class="dv">18</span>)]</code></pre></div>
 <pre><code>##   id fatherid sex affected age nofYears   nYearRisk
 ## 1 11        0   1        0  69        5         NaN
 ## 2 12        0   2        0  69        5         NaN
-## 3 21       11   1        0  34        5 0.016963636
-## 4 22       11   2        0  34        5 0.038827273
+## 3 21       11   1        0  34        5 0.017672727
+## 4 22       11   2        0  34        5 0.039618182
 ## 5 23       11   1        1  36        5 0.000000000
 ## 6 24        0   2       NA  34        5          NA
-## 7 31       23   1        0   7        5 0.001847800
-## 8 32       23   2        0   8        5 0.003246377</code></pre>
+## 7 31       23   1        0   7        5 0.001827607
+## 8 32       23   2        0   8        5 0.003222826</code></pre>
 <p>The <code>nYearRisk</code> column gives risk of developing the condition in the next <em>n</em> years, the <code>nofYears</code> column specifies <em>n</em>. One can see comparing the 2nd and 3rd generations, that the 2nd generation have greater 5 year risk than the 3rd generation (for risks this is reversed). This makes sense given the age of onset curve (in the disease epidemiological findings above).</p>
 </div>
 </div>
@@ -344,15 +350,55 @@ lRes$dfPedRisk[,<span class="kw">c</span>(<span class="dv">2</span>,<span class=
 </div>
 <div id="installation" class="section level1">
 <h1>Installation</h1>
-<p>If you want to use the R package (as opposed to the website) you will have to install it. You can install from github by entering the folowing at the R prompt</p>
+<p>If you want to use R package <code>diseaseRiskPredictor</code> (as opposed to just using the website) you will have to install it. We only make available the source package (as opposed to binary package(s)). Because of this, you will have to build the package from the source. Although mostly written in R, the package also contains some C++ functions. These will need to be compiled and linked into the package.</p>
+<div id="install-r-package-development-tools" class="section level2">
+<h2>Install R package development tools</h2>
+<p>To compile and link in the C++ code you will need a set of R package development tools</p>
+<ul>
+<li>On Windows, download and install <code>Rtools</code>. See <a href="https://cran.r-project.org/bin/windows/Rtools" class="uri">https://cran.r-project.org/bin/windows/Rtools</a>.</li>
+<li>On Mac, install the <code>Xcode</code> command line tools from the Mac App Store.</li>
+<li>On Linux, install the R development package, usually called <code>r-devel</code> or <code>r-base-dev</code>.</li>
+</ul>
+<div id="check-tools-installation" class="section level3">
+<h3>Check tools installation</h3>
+<p>Enter the following at the R console prompt. The <code>install.packages</code> command will prompt you to choose a repository to install from, it doesn’t matter which one you choose.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install it</span>
-devtools::<span class="kw">install_github</span>(<span class="st">&quot;DesmondCampbell/diseaseRiskPredictor&quot;</span>)
+<span class="kw">install.packages</span>(<span class="st">&quot;Rcpp&quot;</span>)
 
 <span class="co"># attach it</span>
-<span class="kw">library</span>(<span class="st">&quot;diseaseRiskPredictor&quot;</span>)</code></pre></div>
-<p>For this to work you will have to have already installed the <code>devtools</code> package.</p>
-<p>There is currently a bug in the kinship2::plot.pedigree function which prevents it from plotting some valid pedigrees. Run the following command to replace the kinship2 function with a patch function which fixes the bug.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assignInNamespace</span>( <span class="st">&quot;plot.pedigree&quot;</span>, diseaseRiskPredictor:::plot.pedigree.FIXED, <span class="dt">ns=</span><span class="st">&quot;kinship2&quot;</span>)</code></pre></div>
+<span class="kw">library</span>(Rcpp)
+
+<span class="co"># test c++ code for adding 1 plus 1</span>
+<span class="kw">evalCpp</span>(<span class="st">'1+1'</span>,<span class="dt">showOutput=</span><span class="dv">1</span>,<span class="dt">rebuild=</span><span class="dv">1</span>) </code></pre></div>
+<p>After about a minute, you should get a few lines of output with the last line giving the answer 2. That proves the tools installation worked.</p>
+<p>On Windows you can check tools installation in another way. Enter the following at the R console prompt.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install it</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)
+
+<span class="co"># attach it</span>
+<span class="kw">library</span>(devtools)
+
+<span class="co"># test for Rtools installation</span>
+<span class="kw">find_rtools</span>()</code></pre></div>
+<p>You should get the answer <code>TRUE</code>. I don’t know the equivalent commands for Mac or Linux.</p>
+</div>
+</div>
+<div id="build-and-install" class="section level2">
+<h2>Build and Install</h2>
+<p>So now you should have the ability to build source R packages. The R package <code>devtools</code> provides helper functions for doing this, and also for installing from non-CRAN locations. We are using github to host our package. We will use <code>devtools</code> to download and install it from there. Enter the following at the R prompt</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)
+
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;DesmondCampbell/diseaseRiskPredictor&quot;</span>)</code></pre></div>
+</div>
+<div id="to-use-diseaseriskpredictor" class="section level2">
+<h2>To use diseaseRiskPredictor</h2>
+<p>To use <code>diseaseRiskPredictor</code>, attach it via the <code>library</code> command. There is currently a bug in the kinship2::plot.pedigree function which prevents it from plotting some valid pedigrees. Run the following command to replace the kinship2 function with a patch function which fixes the bug.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># attach it</span>
+<span class="kw">library</span>(<span class="st">&quot;diseaseRiskPredictor&quot;</span>)
+
+<span class="kw">assignInNamespace</span>( <span class="st">&quot;plot.pedigree&quot;</span>, diseaseRiskPredictor<span class="op">:::</span>plot.pedigree.FIXED, <span class="dt">ns=</span><span class="st">&quot;kinship2&quot;</span>)</code></pre></div>
+<p>That’s it.</p>
+</div>
 </div>
 <div id="methodology" class="section level1">
 <h1>Methodology</h1>
