@@ -173,24 +173,67 @@ It provides example disease models and pedigrees and tutorials illustrating the 
 * http://grass.cgs.hku.hk:3838/mdrc/current
 
 # Installation
-If you want to use the R package (as opposed to the website) you will have to install it. You can install from github by entering the folowing at the R prompt
+If you want to use R package `diseaseRiskPredictor` (as opposed to just using the website) you will have to install it. 
+We only make available the source package (as opposed to binary package(s)). 
+Because of this, you will have to build the package from the source. 
+Although mostly written in R, the package also contains some C++ functions. These will need to be compiled and linked into the package. 
 
+## Install R package development tools
+To compile and link in the C++ code you will need a set of R package development tools 
+
+* On Windows, download and install `Rtools`. See https://cran.r-project.org/bin/windows/Rtools.
+* On Mac, install the `Xcode` command line tools from the Mac App Store.
+* On Linux, install the R development package, usually called `r-devel` or `r-base-dev`. 
+
+### Check tools installation
+Enter the following at the R console prompt. The `install.packages` command will prompt you to choose a repository to install from, it doesn't matter which one you choose.
 ````{r eval=FALSE}
 # install it
-devtools::install_github("DesmondCampbell/diseaseRiskPredictor")
+install.packages("Rcpp")
 
 # attach it
-library("diseaseRiskPredictor")
+library(Rcpp)
+
+# test c++ code for adding 1 plus 1
+evalCpp('1+1',showOutput=1,rebuild=1) 
+````
+After about a minute, you should get a few lines of output with the last line giving the answer 2. That proves the tools installation worked.
+
+On Windows you can check tools installation in another way. Enter the following at the R console prompt. 
+````{r eval=FALSE}
+# install it
+install.packages("devtools")
+
+# attach it
+library(devtools)
+
+# test for Rtools installation
+find_rtools()
+````
+You should get the answer `TRUE`. I don't know the equivalent commands for Mac or Linux.
+
+## Build and Install
+So now you should have the ability to build source R packages.
+The R package `devtools` provides helper functions for doing this, and also for installing from non-CRAN locations. 
+We are using github to host our package. We will use `devtools` to download and install it from there.
+Enter the following at the R prompt
+````{r eval=FALSE}
+install.packages("devtools")
+
+devtools::install_github("DesmondCampbell/diseaseRiskPredictor")
 ````
 
-For this to work you will have to have already installed the `devtools` package.
-
-There is currently a bug in the kinship2::plot.pedigree function which prevents it from plotting some valid pedigrees. Run the following command to replace the kinship2 function with a patch function which fixes the bug.
+## To use diseaseRiskPredictor
+To use `diseaseRiskPredictor`, attach it via the `library` command. There is currently a bug in the kinship2::plot.pedigree function which prevents it from plotting some valid pedigrees. Run the following command to replace the kinship2 function with a patch function which fixes the bug.
 
 ````{r eval=FALSE}
+# attach it
+library("diseaseRiskPredictor")
+
 assignInNamespace( "plot.pedigree", diseaseRiskPredictor:::plot.pedigree.FIXED, ns="kinship2")
 ````
  
+That's it.
 
 # Methodology
 The methodology used in the construction of the disease models is detailed in our paper, Campbell et al. 2017.

@@ -327,7 +327,7 @@ fnCalcConditioningOnRestOfVariables <- function( mCov )
 #' @param nofIter XXXX
 #' @return XXXX
 #' @export
-fnSampleConditionedLiaDistribution <- function( dfPed, mPostCov, mPostMean, nofBurnIn=100, nofIter=9000 )
+fnSampleConditionedLiaDistribution <- function( dfPed, mPostCov, mPostMean, nofBurnIn=1000, nofIter=10000 )
 {
   lConditioningOnRest <- fnCalcConditioningOnRestOfVariables( mPostCov )
   lmRegCoeff <- lConditioningOnRest$lmRegCoeff

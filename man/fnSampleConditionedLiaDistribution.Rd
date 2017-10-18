@@ -5,7 +5,7 @@
 \title{XXXX}
 \usage{
 fnSampleConditionedLiaDistribution(dfPed, mPostCov, mPostMean,
-  nofBurnIn = 100, nofIter = 9000)
+  nofBurnIn = 1000, nofIter = 10000)
 }
 \arguments{
 \item{dfPed}{XXXX}
