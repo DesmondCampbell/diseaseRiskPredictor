@@ -1,5 +1,6 @@
 # don't call library() in a package
 suppressPackageStartupMessages( library(abind) ) # for adrop()
+suppressPackageStartupMessages( library(MASS) ) # for ginv()
 
 
 #' Create population cov matrix for a single person
@@ -154,7 +155,7 @@ fnPearsonAitken <- function( priorMeanC,priorCovC, postMeanA,postCovA )
 
   if( !all(vsA %in% vsC)) stop( "Expected A to be a subset of C \n")
 
-  # calc B set
+  # determine B variables
   vsB <- vsC[ !vsC %in% vsA]
 
   # validate
@@ -164,7 +165,20 @@ fnPearsonAitken <- function( priorMeanC,priorCovC, postMeanA,postCovA )
   if( !all(rownames(postMeanA) == rownames(postCovA) )) stop( "Expected rownames to match for A \n")
 
   # calc post cov B
-  priorInvCovA <- solve(priorCovC[vsA,vsA,drop=F])
+
+  # we will use pseudoinverse rather than inverse of prior cov A
+  # if inverse used then function will fail when prior cov A is of reduced rank
+  # Paul Rubin states in discussion of the reg coef formula that it can be reframed in terms of the pseudoinverse of X
+  # see http://spartanideas.msu.edu/2015/10/21/regression-via-pseudoinverse/
+  # b = inv(X'X)X'y
+  # b = pseudoinv(X)y
+  # b = pseudoinv(X'X)X'y
+  # it is this last identity we will use, i.e. pseudoinv(X'X)X'
+  # We can use pseudoinv(X'X) in place of inv(X'X) in the PA selection formulae
+  # because everywhere it is used it is pre-multiplied by X or post multiplied by X'
+  priorCovA <- priorCovC[vsA,vsA,drop=F]
+  priorInvCovA <- MASS::ginv(priorCovA)
+
   priorCovBA <- priorCovC[vsB,vsA,drop=F]
   mRegCoeff <- priorCovBA %*% priorInvCovA
   colnames(mRegCoeff) <- vsA
@@ -210,6 +224,7 @@ fnCalcPedDistributionPosteriorToObsRiskFactors <- function( vMeanAllPed, mCovAll
   postCovA <- mPriorCov[vsA,vsA,drop=F]; postCovA[,] <- 0
   postCovA
   lPA <- fnPearsonAitken( mPriorMean, mPriorCov, as.matrix(postMeanA,ncol=1), postCovA )
+  
   # get posterior distribution dropping all variables with no uncertainty
   vbxHasVariance <- diag(lPA$postCovC)!=0
   mPostCov <- lPA$postCovC[vbxHasVariance,vbxHasVariance]
@@ -327,7 +342,7 @@ fnCalcConditioningOnRestOfVariables <- function( mCov )
 #' @param nofIter XXXX
 #' @return XXXX
 #' @export
-fnSampleConditionedLiaDistribution <- function( dfPed, mPostCov, mPostMean, nofBurnIn=1000, nofIter=10000 )
+fnSampleConditionedLiaDistribution <- function( dfPed, mPostCov, mPostMean, nofBurnIn=100, nofIter=9000 )
 {
   lConditioningOnRest <- fnCalcConditioningOnRestOfVariables( mPostCov )
   lmRegCoeff <- lConditioningOnRest$lmRegCoeff
@@ -639,6 +654,7 @@ fnPrepareForRiskPrediction <- function( dfPed, lDis, bVerbose=F )
 
     # calc pedigree covariance matrix for trait risk factors, liability and its partitions
     mCovAllPed <- fnCalcPedCov( mCovPerson, dfPed )
+
     # drop variables with zero variance
     vbxR <- apply(mCovAllPed,1,function(x){ !all(x==0)} )
     vbxC <- apply(mCovAllPed,2,function(x){ !all(x==0)} )
@@ -670,6 +686,7 @@ fnPrepareForRiskPrediction <- function( dfPed, lDis, bVerbose=F )
     #fnStr(mPostCov)
     #fnStr(mPostMean)
 
+    if(T){
     # drop variables other than total variables
     # this is to ensure a non-singular cov matrix, if tot and its partitions are included the matrix will be singular
     vbxTot <- grepl("_Tot",rownames(mPostMean))
@@ -681,11 +698,17 @@ fnPrepareForRiskPrediction <- function( dfPed, lDis, bVerbose=F )
     vbxTot <- grepl("^liability_Tot",rownames(mPostMean))
     mPostMean <- mPostMean[vbxTot,1,drop=F]
     mPostCov <- mPostCov[vbxTot,vbxTot]
-    #fnRep("The mean and cov of the pedigree distribution conditioned on the observed risk factors follow")
-    #fnRep("Mean =")
-    mPostMean
-    #fnRep("Cov =")
-    mPostCov
+    } else {
+    # drop variables other than liability variables
+    vbxLia <- grepl("^liability_",rownames(mPostMean))
+    mPostMean <- mPostMean[vbxLia,1,drop=F]
+    mPostCov <- mPostCov[vbxLia,vbxLia]
+    }
+    if(F){
+    fnRep("The mean and cov of the pedigree distribution conditioned on the observed risk factors follow")
+    fnRep("Mean ="); mPostMean
+    fnRep("Cov ="); mPostCov
+    }
     lOut$mPriorCov <- mPostCov
     lOut$mPriorMean <- mPostMean
 
